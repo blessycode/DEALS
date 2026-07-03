@@ -78,17 +78,8 @@ def append_data(ws, row, start, headers, date_value, currency):
     data.append(currency)
     ws.append(data)
 
-def main():
-    Tk().withdraw()
-    file_path = filedialog.askopenfilename(
-        title="Select workbook",
-        filetypes=[("Excel files", "*.xlsx *.xlsm")]
-    )
-    if not file_path:
-        print("No file selected.")
-        return
-
-    wb = load_workbook(file_path, read_only=True, data_only=True)
+def build_assets_workbook(file_path_or_stream):
+    wb = load_workbook(file_path_or_stream, read_only=True, data_only=True)
     out = Workbook()
     out.remove(out.active)
 
@@ -112,8 +103,6 @@ def main():
         mm_start = None
         sec_headers = None
         sec_start = None
-
-        print("Processing:", sheet_name, date_value)
 
         for row in ws.iter_rows(values_only=True):
             row = list(row)
@@ -174,6 +163,20 @@ def main():
                     append_data(out_ws, row, sec_start, headers, date_value, currency)
                     sec_count += 1
 
+    return out, mm_count, sec_count
+
+
+def main():
+    Tk().withdraw()
+    file_path = filedialog.askopenfilename(
+        title="Select workbook",
+        filetypes=[("Excel files", "*.xlsx *.xlsm")]
+    )
+    if not file_path:
+        print("No file selected.")
+        return
+
+    out, mm_count, sec_count = build_assets_workbook(file_path)
     output = os.path.join(os.path.dirname(file_path), "Combined_Assets_By_Month_2026.xlsx")
     out.save(output)
 
