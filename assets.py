@@ -1,6 +1,5 @@
 import os, re
 from datetime import datetime
-from tkinter import Tk, filedialog
 from openpyxl import load_workbook, Workbook
 
 YEAR = "2026"
@@ -167,6 +166,8 @@ def build_assets_workbook(file_path_or_stream):
 
 
 def main():
+    from tkinter import Tk, filedialog
+
     Tk().withdraw()
     file_path = filedialog.askopenfilename(
         title="Select workbook",
