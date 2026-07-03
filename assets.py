@@ -65,7 +65,7 @@ def headers_from(row, start):
 def output_headers(headers, include_common_reference):
     extra_headers = ["CURRENCY"]
     if include_common_reference:
-        extra_headers.append("Common Refference")
+        extra_headers.append("Common Reference")
     extra_headers.append("DATE")
     return headers + extra_headers
 
@@ -182,8 +182,8 @@ def build_assets_workbook(file_path_or_stream):
                         sec_start = tx
                         sec_headers = [f"Column_{i+1}" for i in range(len(row[sec_start:]))]
 
-                    out_ws, headers = get_sheet(out, cache, f"SECURITIES_{month}", sec_headers, False)
-                    append_data(out_ws, row, sec_start, headers, date_value, currency, dt)
+                    out_ws, headers = get_sheet(out, cache, f"SECURITIES_{month}", sec_headers, True)
+                    append_data(out_ws, row, sec_start, headers, date_value, currency, dt, True)
                     sec_count += 1
 
     return out, mm_count, sec_count
