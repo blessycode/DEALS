@@ -283,12 +283,49 @@ st.markdown(
         }
 
         div[data-baseweb="select"] > div {
-            border-color: #aeb9c8;
-            background: #ffffff;
+            border-color: #8fa0b5 !important;
+            background: #ffffff !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"],
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] *,
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] input {
+            color: var(--ink) !important;
+            -webkit-text-fill-color: var(--ink) !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+            background: #ffffff !important;
+            color: var(--ink) !important;
         }
 
         div[data-baseweb="select"] span {
-            color: var(--ink);
+            color: var(--ink) !important;
+            -webkit-text-fill-color: var(--ink) !important;
+        }
+
+        div[data-baseweb="select"] svg {
+            color: #334155 !important;
+            fill: #334155 !important;
+        }
+
+        div[role="listbox"],
+        ul[role="listbox"] {
+            background: #ffffff !important;
+            color: var(--ink) !important;
+        }
+
+        div[role="option"],
+        ul[role="listbox"] li {
+            background: #ffffff !important;
+            color: var(--ink) !important;
+            -webkit-text-fill-color: var(--ink) !important;
+        }
+
+        div[role="option"]:hover,
+        ul[role="listbox"] li:hover {
+            background: #eef2f7 !important;
+            color: var(--ink) !important;
         }
 
         .stButton > button,
