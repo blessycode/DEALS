@@ -53,6 +53,15 @@ def make_comparison_report(df1, df2, column1, column2):
     only_file2 = merged[merged["_merge"] == "right_only"].drop(columns=["_merge"])
     matched = merged[merged["_merge"] == "both"].drop(columns=["_merge"])
 
+    counts = {
+        "file1": len(values1),
+        "file2": len(values2),
+        "matched": len(matched),
+        "only_file1": len(only_file1),
+        "only_file2": len(only_file2),
+    }
+    same_values = only_file1.empty and only_file2.empty
+
     summary = pd.DataFrame({
         "CHECK": [
             "Same selected values in both files?",
@@ -63,12 +72,12 @@ def make_comparison_report(df1, df2, column1, column2):
             "Only in second file count",
         ],
         "RESULT": [
-            "YES" if only_file1.empty and only_file2.empty else "NO",
-            len(values1),
-            len(values2),
-            len(matched),
-            len(only_file1),
-            len(only_file2),
+            "YES" if same_values else "NO",
+            f"{counts['file1']:,}",
+            f"{counts['file2']:,}",
+            f"{counts['matched']:,}",
+            f"{counts['only_file1']:,}",
+            f"{counts['only_file2']:,}",
         ]
     })
 
@@ -80,7 +89,7 @@ def make_comparison_report(df1, df2, column1, column2):
         only_file2.to_excel(writer, sheet_name="ONLY_IN_FILE_2", index=False)
 
     output.seek(0)
-    return summary, output
+    return summary, output, same_values, counts
 
 
 def make_assets_report(uploaded_file):
@@ -93,9 +102,9 @@ def make_assets_report(uploaded_file):
 
     summary = pd.DataFrame({
         "ITEM": ["MM rows", "SECURITIES rows"],
-        "COUNT": [mm_count, sec_count],
+        "COUNT": [f"{mm_count:,}", f"{sec_count:,}"],
     })
-    return summary, output
+    return summary, output, mm_count, sec_count
 
 
 st.set_page_config(page_title="Deals Workbench", layout="wide")
@@ -452,28 +461,25 @@ with assets_tab:
             "Build Assets Workbook",
             disabled=assets_file is None,
             type="primary",
-            use_container_width=True
+            width="stretch"
         )
 
         if build_assets:
             with st.spinner("Building assets workbook..."):
-                assets_summary, assets_report = make_assets_report(assets_file)
-
-            mm_count = int(assets_summary.loc[assets_summary["ITEM"] == "MM rows", "COUNT"].iloc[0])
-            sec_count = int(assets_summary.loc[assets_summary["ITEM"] == "SECURITIES rows", "COUNT"].iloc[0])
+                assets_summary, assets_report, mm_count, sec_count = make_assets_report(assets_file)
 
             st.success("Assets workbook is ready.")
             col1, col2 = st.columns(2)
             col1.metric("MM rows", f"{mm_count:,}")
             col2.metric("Securities rows", f"{sec_count:,}")
-            st.dataframe(assets_summary, use_container_width=True, hide_index=True)
+            st.dataframe(assets_summary, width="stretch", hide_index=True)
             st.download_button(
                 label="Download Assets Workbook",
                 data=assets_report,
                 file_name="Combined_Assets_By_Month_2026.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 type="primary",
-                use_container_width=True
+                width="stretch"
             )
 
 with compare_tab:
@@ -509,44 +515,32 @@ with compare_tab:
             with column_col2:
                 column2 = st.selectbox("Column in second file", list(df2.columns))
 
-            if st.button("Compare Files", type="primary", use_container_width=True):
+            if st.button("Compare Files", type="primary", width="stretch"):
                 with st.spinner("Comparing selected columns..."):
-                    compare_summary, compare_report = make_comparison_report(df1, df2, column1, column2)
+                    compare_summary, compare_report, same_values, counts = make_comparison_report(
+                        df1,
+                        df2,
+                        column1,
+                        column2
+                    )
 
-                result = compare_summary.loc[
-                    compare_summary["CHECK"] == "Same selected values in both files?",
-                    "RESULT"
-                ].iloc[0]
-                matched = int(compare_summary.loc[
-                    compare_summary["CHECK"] == "Matched selected value count",
-                    "RESULT"
-                ].iloc[0])
-                only_first = int(compare_summary.loc[
-                    compare_summary["CHECK"] == "Only in first file count",
-                    "RESULT"
-                ].iloc[0])
-                only_second = int(compare_summary.loc[
-                    compare_summary["CHECK"] == "Only in second file count",
-                    "RESULT"
-                ].iloc[0])
-
-                if result == "YES":
+                if same_values:
                     st.success("The selected values match.")
                 else:
                     st.warning("Differences found in the selected values.")
 
                 metric_col1, metric_col2, metric_col3 = st.columns(3)
-                metric_col1.metric("Matched", f"{matched:,}")
-                metric_col2.metric("Only in first", f"{only_first:,}")
-                metric_col3.metric("Only in second", f"{only_second:,}")
-                st.dataframe(compare_summary, use_container_width=True, hide_index=True)
+                metric_col1.metric("Matched", f"{counts['matched']:,}")
+                metric_col2.metric("Only in first", f"{counts['only_file1']:,}")
+                metric_col3.metric("Only in second", f"{counts['only_file2']:,}")
+                st.dataframe(compare_summary, width="stretch", hide_index=True)
                 st.download_button(
                     label="Download Comparison Report",
                     data=compare_report,
                     file_name="Staff_Comparison_Report.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     type="primary",
-                    use_container_width=True
+                    width="stretch"
                 )
         else:
             st.info("Upload both Excel files to choose sheets and columns.")
