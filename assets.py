@@ -69,16 +69,20 @@ def output_headers(headers, include_common_reference):
     extra_headers.append("DATE")
     return headers + extra_headers
 
-def transaction_id_from_data(data, headers):
+def value_from_headers(data, headers, preferred_headers):
+    normalized_preferred = {
+        clean(header).upper().replace(" ", "")
+        for header in preferred_headers
+    }
     for i, header in enumerate(headers):
         normalized = clean(header).upper().replace(" ", "")
-        if normalized == "TRANSACTIONID" and i < len(data):
+        if normalized in normalized_preferred and i < len(data):
             return data[i]
     return data[0] if data else ""
 
-def common_reference(data, headers, dt):
-    transaction_id = transaction_id_from_data(data, headers)
-    return f"{transaction_id}{dt.day}" if transaction_id else ""
+def common_reference(data, headers, dt, preferred_headers):
+    reference_id = value_from_headers(data, headers, preferred_headers)
+    return f"{reference_id}{dt.day}" if reference_id else ""
 
 def get_sheet(out_wb, cache, name, headers, include_common_reference):
     if name not in cache:
@@ -91,13 +95,13 @@ def get_sheet(out_wb, cache, name, headers, include_common_reference):
         }
     return cache[name]["ws"], cache[name]["headers"]
 
-def append_data(ws, row, start, headers, date_value, currency, dt, include_common_reference=False):
+def append_data(ws, row, start, headers, date_value, currency, dt, common_reference_headers=None):
     data = [clean(v) for v in row[start:start+len(headers)]]
     while len(data) < len(headers):
         data.append("")
     data.append(currency)
-    if include_common_reference:
-        data.append(common_reference(data, headers, dt))
+    if common_reference_headers:
+        data.append(common_reference(data, headers, dt, common_reference_headers))
     data.append(date_value)
     ws.append(data)
 
@@ -137,7 +141,7 @@ def build_assets_workbook(file_path_or_stream):
             if "TOTAL" in rt:
                 continue
 
-            if "LIABILIT" in rt:
+            if "LIABILITIES" in rt:
                 section = None
                 currency = ""
                 continue
@@ -166,7 +170,16 @@ def build_assets_workbook(file_path_or_stream):
                         mm_headers = [f"Column_{i+1}" for i in range(len(row[mm_start:]))]
 
                     out_ws, headers = get_sheet(out, cache, f"MM_{month}", mm_headers, True)
-                    append_data(out_ws, row, mm_start, headers, date_value, currency, dt, True)
+                    append_data(
+                        out_ws,
+                        row,
+                        mm_start,
+                        headers,
+                        date_value,
+                        currency,
+                        dt,
+                        {"TRANSACTION ID", "TRANSACTIONID"}
+                    )
                     mm_count += 1
 
             elif section == "HTM":
@@ -183,7 +196,16 @@ def build_assets_workbook(file_path_or_stream):
                         sec_headers = [f"Column_{i+1}" for i in range(len(row[sec_start:]))]
 
                     out_ws, headers = get_sheet(out, cache, f"SECURITIES_{month}", sec_headers, True)
-                    append_data(out_ws, row, sec_start, headers, date_value, currency, dt, True)
+                    append_data(
+                        out_ws,
+                        row,
+                        sec_start,
+                        headers,
+                        date_value,
+                        currency,
+                        dt,
+                        {"ID"}
+                    )
                     sec_count += 1
 
     return out, mm_count, sec_count
