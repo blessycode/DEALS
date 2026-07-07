@@ -459,7 +459,7 @@ st.markdown(
             padding: 0.3rem;
             border: 1px solid rgba(36, 75, 122, 0.14);
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.76);
+            background: rgba(232, 239, 248, 0.86);
             box-shadow: 0 10px 28px rgba(23, 32, 51, 0.07);
         }
 
@@ -475,14 +475,15 @@ st.markdown(
             border: 1px solid transparent;
             border-radius: 6px;
             background: transparent;
-            color: var(--muted);
+            color: #40546d;
             font-weight: 760;
             transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease;
         }
 
         .stTabs [data-baseweb="tab"]:hover {
-            background: #f3f7fb;
-            color: var(--ink);
+            background: rgba(36, 75, 122, 0.1);
+            border-color: rgba(36, 75, 122, 0.14);
+            color: var(--primary-dark);
         }
 
         .stTabs [data-baseweb="tab"] p {
@@ -494,14 +495,26 @@ st.markdown(
         }
 
         .stTabs [aria-selected="true"] {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-            border-color: rgba(36, 75, 122, 0.22);
-            box-shadow: 0 8px 20px rgba(36, 75, 122, 0.13);
-            color: var(--primary);
+            background: linear-gradient(180deg, #285684 0%, var(--primary) 100%);
+            border-color: rgba(24, 54, 87, 0.5);
+            box-shadow: 0 8px 18px rgba(24, 54, 87, 0.2);
+            color: #ffffff;
+            position: relative;
+        }
+
+        .stTabs [aria-selected="true"]::after {
+            content: "";
+            position: absolute;
+            left: 0.7rem;
+            right: 0.7rem;
+            bottom: 0.24rem;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--accent);
         }
 
         .stTabs [aria-selected="true"] p {
-            color: var(--primary) !important;
+            color: #ffffff !important;
         }
 
         div[data-testid="stAlert"] {
