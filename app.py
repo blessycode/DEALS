@@ -113,113 +113,205 @@ st.markdown(
     """
     <style>
         :root {
-            --ink: #111827;
-            --muted: #4b5563;
-            --line: #d7dee8;
+            --ink: #172033;
+            --muted: #667085;
+            --line: #d8dee8;
             --panel: #ffffff;
-            --navy: #10233f;
-            --navy-2: #17365f;
-            --accent: #0f9f8f;
-            --gold: #d99b16;
-            --soft: #f3f6fa;
+            --panel-soft: #f7f9fc;
+            --primary: #244b7a;
+            --primary-dark: #183657;
+            --accent: #0f8f7e;
+            --warning: #a15c00;
+            --success: #0c6b4f;
         }
 
         .stApp {
-            background: linear-gradient(180deg, #eef2f6 0%, #f8fafc 48%, #eef2f6 100%);
+            background:
+                radial-gradient(circle at top left, rgba(15, 143, 126, 0.12), transparent 28rem),
+                linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
             color: var(--ink);
         }
 
         .block-container {
-            padding-top: 1.35rem;
-            padding-bottom: 3rem;
-            max-width: 1120px;
+            max-width: 1180px;
+            padding-top: 1.2rem;
+            padding-bottom: 3.5rem;
         }
 
-        h1, h2, h3, p, label, span, div {
+        h1, h2, h3, p, label, span, div, button {
             letter-spacing: 0;
         }
 
-        .main-header {
+        .app-shell {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .hero {
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            padding: 1.35rem 1.55rem 1.45rem;
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 66%, #0d5f66 100%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 22px 60px rgba(16, 35, 63, 0.22);
-            margin-bottom: 1.05rem;
+            background: #10233f;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 18px 50px rgba(16, 35, 63, 0.18);
             color: #ffffff;
+            margin-bottom: 1rem;
         }
 
-        .main-header::before {
+        .hero::before {
             content: "";
             position: absolute;
-            inset: 0;
-            border-top: 5px solid var(--gold);
+            inset: auto 0 0;
+            height: 5px;
+            background: linear-gradient(90deg, #0f8f7e, #d8a11d, #6c83b5);
             pointer-events: none;
         }
 
-        .main-header h1 {
+        .hero-inner {
             position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 1.25rem;
+            align-items: end;
+            padding: 1.4rem 1.55rem 1.55rem;
+        }
+
+        .hero h1 {
             margin: 0;
             color: #ffffff;
-            font-size: 2.35rem;
-            line-height: 1.02;
-            letter-spacing: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1;
+            font-weight: 850;
         }
 
-        .main-header p {
-            position: relative;
+        .hero p {
             max-width: 720px;
-            margin: 0.58rem 0 0;
+            margin: 0.55rem 0 0;
             color: #e7eef7 !important;
-            font-size: 1rem;
+            font-size: 1.02rem;
+            line-height: 1.55;
         }
 
-        .main-header *,
-        div[data-testid="stMarkdownContainer"] .main-header p {
+        .hero-stat {
+            min-width: 160px;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            padding-left: 1rem;
+        }
+
+        .hero-stat strong,
+        .hero-stat span {
+            display: block;
             color: #ffffff;
         }
 
-        div[data-testid="stMarkdownContainer"] .main-header p {
-            color: #e7eef7 !important;
+        .hero-stat strong {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .hero-stat span {
+            color: #d8e4f2;
+            font-size: 0.84rem;
+            margin-top: 0.35rem;
         }
 
         div[data-testid="stVerticalBlockBorderWrapper"] {
             border-color: var(--line);
             background: var(--panel);
-            box-shadow: 0 14px 35px rgba(17, 24, 39, 0.07);
+            border-radius: 8px;
+            box-shadow: 0 12px 34px rgba(23, 32, 51, 0.08);
         }
 
-        div[data-testid="stVerticalBlockBorderWrapper"] > div > div > div {
-            color: var(--ink);
-        }
-
-        .section-title {
-            margin: 0.05rem 0 1rem;
-            padding-bottom: 0.8rem;
+        .panel-heading {
+            margin: -0.1rem 0 1rem;
+            padding-bottom: 0.85rem;
             border-bottom: 1px solid var(--line);
         }
 
-        .section-title h2 {
+        .panel-heading h2 {
             margin: 0;
             color: var(--ink);
-            font-size: 1.32rem;
-            font-weight: 800;
-            letter-spacing: 0;
+            font-size: 1.28rem;
+            line-height: 1.25;
+            font-weight: 820;
         }
 
-        .section-title p {
-            margin: 0.3rem 0 0;
+        .panel-heading p {
+            margin: 0.35rem 0 0;
+            color: var(--muted) !important;
+            font-size: 0.96rem;
+            line-height: 1.45;
+        }
+
+        .step-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0.85rem 0.9rem;
+            background: var(--panel-soft);
+            min-height: 5.25rem;
+        }
+
+        .step-card span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.55rem;
+            height: 1.55rem;
+            border-radius: 999px;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-bottom: 0.45rem;
+        }
+
+        .step-card strong {
+            display: block;
+            margin: 0;
+            color: var(--ink);
+            font-size: 0.98rem;
+        }
+
+        .step-card p {
+            margin: 0.25rem 0 0;
             color: var(--muted);
-            font-weight: 500;
+            font-size: 0.87rem;
+            line-height: 1.35;
+        }
+
+        .result-strip {
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--accent);
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 0.9rem 1rem;
+            margin: 0.35rem 0 0.85rem;
+        }
+
+        .result-strip.warning {
+            border-left-color: var(--warning);
+        }
+
+        .result-strip.success {
+            border-left-color: var(--success);
+        }
+
+        .result-strip strong {
+            display: block;
+            color: var(--ink);
+            font-size: 1.02rem;
+        }
+
+        .result-strip p {
+            margin: 0.25rem 0 0;
+            color: var(--muted);
         }
 
         label,
         div[data-testid="stFileUploader"] label,
         div[data-testid="stSelectbox"] label {
             color: var(--ink) !important;
-            font-weight: 700 !important;
+            font-weight: 760 !important;
         }
 
         div[data-testid="stMarkdownContainer"] p,
@@ -227,32 +319,29 @@ st.markdown(
             color: var(--muted);
         }
 
-        .section-title p,
-        div[data-testid="stMarkdownContainer"] .section-title p {
-            color: var(--muted) !important;
-        }
-
         div[data-testid="stMetric"] {
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: 0.8rem 0.95rem;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            padding: 0.85rem 0.95rem;
+            background: #ffffff;
+            box-shadow: 0 8px 20px rgba(23, 32, 51, 0.05);
         }
 
         div[data-testid="stMetricLabel"] p {
             color: var(--muted) !important;
-            font-weight: 700;
+            font-weight: 760;
         }
 
         div[data-testid="stMetricValue"] {
-            color: var(--navy) !important;
+            color: var(--primary-dark) !important;
+            font-size: 1.75rem;
         }
 
         div[data-testid="stFileUploader"] {
-            border: 1px dashed #9aa8ba;
+            border: 1px dashed #9ba8b8;
             border-radius: 8px;
-            padding: 0.75rem 0.85rem;
-            background: var(--soft);
+            padding: 0.8rem 0.9rem;
+            background: var(--panel-soft);
         }
 
         div[data-testid="stFileUploader"] small,
@@ -262,16 +351,16 @@ st.markdown(
         }
 
         div[data-testid="stFileUploader"] section {
-            border-color: #aab7c7;
+            border-color: #aab6c5;
             background: #ffffff;
         }
 
         div[data-testid="stFileUploader"] button {
-            background: var(--navy);
-            border: 1px solid var(--navy);
+            background: var(--primary);
+            border: 1px solid var(--primary);
             color: #ffffff !important;
             border-radius: 8px;
-            font-weight: 800;
+            font-weight: 760;
         }
 
         div[data-testid="stFileUploader"] button *,
@@ -282,18 +371,15 @@ st.markdown(
         }
 
         div[data-testid="stFileUploader"] button:hover {
-            background: #0b1a30;
-            border-color: #0b1a30;
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
             color: #ffffff !important;
-        }
-
-        div[data-testid="stFileUploaderDropzoneInstructions"] span {
-            color: var(--ink) !important;
         }
 
         div[data-baseweb="select"] > div {
             border-color: #8fa0b5 !important;
             background: #ffffff !important;
+            border-radius: 8px !important;
         }
 
         div[data-testid="stSelectbox"] div[data-baseweb="select"],
@@ -318,39 +404,20 @@ st.markdown(
             fill: #334155 !important;
         }
 
-        div[role="listbox"],
-        ul[role="listbox"] {
-            background: #ffffff !important;
-            color: var(--ink) !important;
-        }
-
-        div[role="option"],
-        ul[role="listbox"] li {
-            background: #ffffff !important;
-            color: var(--ink) !important;
-            -webkit-text-fill-color: var(--ink) !important;
-        }
-
-        div[role="option"]:hover,
-        ul[role="listbox"] li:hover {
-            background: #eef2f7 !important;
-            color: var(--ink) !important;
-        }
-
         .stButton > button,
         .stDownloadButton > button {
             width: 100%;
             border-radius: 8px;
             font-weight: 800;
-            min-height: 2.75rem;
-            border: 1px solid var(--navy);
+            min-height: 2.8rem;
+            border: 1px solid var(--primary);
         }
 
         .stButton > button[kind="primary"],
         .stDownloadButton > button[kind="primary"] {
-            background: var(--navy);
+            background: var(--primary);
             color: #ffffff !important;
-            border-color: var(--navy);
+            border-color: var(--primary);
         }
 
         .stButton > button[kind="primary"] *,
@@ -364,8 +431,8 @@ st.markdown(
 
         .stButton > button[kind="primary"]:hover,
         .stDownloadButton > button[kind="primary"]:hover {
-            background: #0b1a30;
-            border-color: #0b1a30;
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
             color: #ffffff !important;
         }
 
@@ -385,26 +452,27 @@ st.markdown(
         .stTabs [data-baseweb="tab-list"] {
             gap: 0.5rem;
             border-bottom: 1px solid var(--line);
-            padding-bottom: 0.45rem;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .stTabs [data-baseweb="tab"] {
             border-radius: 8px;
-            padding: 0.55rem 1rem;
+            padding: 0.58rem 1rem;
             background: #ffffff;
             border: 1px solid var(--line);
             color: var(--ink);
-            font-weight: 800;
+            font-weight: 760;
         }
 
         .stTabs [data-baseweb="tab"] p {
             color: var(--ink);
-            font-weight: 800;
+            font-weight: 760;
         }
 
         .stTabs [aria-selected="true"] {
-            background: var(--navy);
-            border-color: var(--navy);
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         .stTabs [aria-selected="true"] p {
@@ -427,6 +495,19 @@ st.markdown(
             border-radius: 8px;
             overflow: hidden;
         }
+
+        @media (max-width: 760px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stat {
+                border-left: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                padding-left: 0;
+                padding-top: 0.9rem;
+            }
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -434,23 +515,45 @@ st.markdown(
 
 st.markdown(
     """
-    <div class="main-header">
-        <h1>Deals Workbench</h1>
-        <p>Fast Excel preparation for assets and sheet comparisons.</p>
+    <div class="hero">
+        <div class="hero-inner">
+            <div>
+                <h1>Deals Workbench</h1>
+                <p>Prepare monthly assets workbooks and reconcile selected Excel values from one focused workspace.</p>
+            </div>
+            <div class="hero-stat">
+                <strong>2</strong>
+                <span>Excel workflows</span>
+            </div>
+        </div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-assets_tab, compare_tab = st.tabs(["Assets", "Compare"])
+assets_tab, compare_tab = st.tabs(["Assets Workbook", "Sheet Compare"])
 
 with assets_tab:
+    step1, step2, step3 = st.columns(3)
+    step1.markdown(
+        """<div class="step-card"><span>1</span><strong>Upload</strong><p>Select the dated source workbook.</p></div>""",
+        unsafe_allow_html=True,
+    )
+    step2.markdown(
+        """<div class="step-card"><span>2</span><strong>Build</strong><p>Extract monthly MM and securities rows.</p></div>""",
+        unsafe_allow_html=True,
+    )
+    step3.markdown(
+        """<div class="step-card"><span>3</span><strong>Download</strong><p>Review counts and save the output workbook.</p></div>""",
+        unsafe_allow_html=True,
+    )
+
     with st.container(border=True):
         st.markdown(
             """
-            <div class="section-title">
+            <div class="panel-heading">
                 <h2>Assets Workbook</h2>
-                <p>Upload the source workbook and generate the monthly MM and securities output.</p>
+                <p>Upload the source workbook and generate monthly MM and securities sheets in one clean file.</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -461,34 +564,56 @@ with assets_tab:
             "Build Assets Workbook",
             disabled=assets_file is None,
             type="primary",
-            width="stretch"
+            use_container_width=True
         )
 
         if build_assets:
             with st.spinner("Building assets workbook..."):
                 assets_summary, assets_report, mm_count, sec_count = make_assets_report(assets_file)
 
-            st.success("Assets workbook is ready.")
+            st.markdown(
+                """
+                <div class="result-strip success">
+                    <strong>Assets workbook is ready.</strong>
+                    <p>Review the extracted row counts below, then download the generated workbook.</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
             col1, col2 = st.columns(2)
             col1.metric("MM rows", f"{mm_count:,}")
             col2.metric("Securities rows", f"{sec_count:,}")
-            st.dataframe(assets_summary, width="stretch", hide_index=True)
+            st.dataframe(assets_summary, use_container_width=True, hide_index=True)
             st.download_button(
                 label="Download Assets Workbook",
                 data=assets_report,
                 file_name="Combined_Assets_By_Month_2026.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 type="primary",
-                width="stretch"
+                use_container_width=True
             )
 
 with compare_tab:
+    step1, step2, step3 = st.columns(3)
+    step1.markdown(
+        """<div class="step-card"><span>1</span><strong>Load files</strong><p>Upload both workbooks for comparison.</p></div>""",
+        unsafe_allow_html=True,
+    )
+    step2.markdown(
+        """<div class="step-card"><span>2</span><strong>Select values</strong><p>Choose the sheet and column in each file.</p></div>""",
+        unsafe_allow_html=True,
+    )
+    step3.markdown(
+        """<div class="step-card"><span>3</span><strong>Export</strong><p>Download matches and differences as Excel.</p></div>""",
+        unsafe_allow_html=True,
+    )
+
     with st.container(border=True):
         st.markdown(
             """
-            <div class="section-title">
+            <div class="panel-heading">
                 <h2>Compare Sheets</h2>
-                <p>Match selected values across two Excel files and export the differences.</p>
+                <p>Match selected values across two Excel files and export the matched and unmatched rows.</p>
             </div>
             """,
             unsafe_allow_html=True
@@ -515,7 +640,13 @@ with compare_tab:
             with column_col2:
                 column2 = st.selectbox("Column in second file", list(df2.columns))
 
-            if st.button("Compare Files", type="primary", width="stretch"):
+            preview_col1, preview_col2 = st.columns(2)
+            with preview_col1:
+                st.caption(f"{len(df1):,} rows loaded from {sheet1}")
+            with preview_col2:
+                st.caption(f"{len(df2):,} rows loaded from {sheet2}")
+
+            if st.button("Compare Files", type="primary", use_container_width=True):
                 with st.spinner("Comparing selected columns..."):
                     compare_summary, compare_report, same_values, counts = make_comparison_report(
                         df1,
@@ -525,22 +656,38 @@ with compare_tab:
                     )
 
                 if same_values:
-                    st.success("The selected values match.")
+                    st.markdown(
+                        """
+                        <div class="result-strip success">
+                            <strong>The selected values match.</strong>
+                            <p>No values appear exclusively in either file.</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
                 else:
-                    st.warning("Differences found in the selected values.")
+                    st.markdown(
+                        """
+                        <div class="result-strip warning">
+                            <strong>Differences found in the selected values.</strong>
+                            <p>Use the exported workbook to review values that appear in only one file.</p>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
                 metric_col1, metric_col2, metric_col3 = st.columns(3)
                 metric_col1.metric("Matched", f"{counts['matched']:,}")
                 metric_col2.metric("Only in first", f"{counts['only_file1']:,}")
                 metric_col3.metric("Only in second", f"{counts['only_file2']:,}")
-                st.dataframe(compare_summary, width="stretch", hide_index=True)
+                st.dataframe(compare_summary, use_container_width=True, hide_index=True)
                 st.download_button(
                     label="Download Comparison Report",
                     data=compare_report,
                     file_name="Staff_Comparison_Report.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     type="primary",
-                    width="stretch"
+                    use_container_width=True
                 )
         else:
             st.info("Upload both Excel files to choose sheets and columns.")
