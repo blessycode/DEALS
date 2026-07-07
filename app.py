@@ -450,33 +450,58 @@ st.markdown(
         }
 
         .stTabs [data-baseweb="tab-list"] {
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--line);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
+            display: inline-flex;
+            gap: 0.25rem;
+            align-items: center;
+            width: auto;
+            max-width: 100%;
+            margin: 0.1rem 0 1.15rem;
+            padding: 0.3rem;
+            border: 1px solid rgba(36, 75, 122, 0.14);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.76);
+            box-shadow: 0 10px 28px rgba(23, 32, 51, 0.07);
+        }
+
+        .stTabs [data-baseweb="tab-border"],
+        .stTabs [data-baseweb="tab-highlight"] {
+            display: none;
         }
 
         .stTabs [data-baseweb="tab"] {
-            border-radius: 8px;
-            padding: 0.58rem 1rem;
-            background: #ffffff;
-            border: 1px solid var(--line);
-            color: var(--ink);
+            min-height: 2.45rem;
+            min-width: 8.75rem;
+            padding: 0.58rem 1.05rem;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
             font-weight: 760;
+            transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease;
+        }
+
+        .stTabs [data-baseweb="tab"]:hover {
+            background: #f3f7fb;
+            color: var(--ink);
         }
 
         .stTabs [data-baseweb="tab"] p {
-            color: var(--ink);
+            color: inherit !important;
+            font-size: 0.96rem;
             font-weight: 760;
+            line-height: 1.1;
+            white-space: nowrap;
         }
 
         .stTabs [aria-selected="true"] {
-            background: var(--primary);
-            border-color: var(--primary);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            border-color: rgba(36, 75, 122, 0.22);
+            box-shadow: 0 8px 20px rgba(36, 75, 122, 0.13);
+            color: var(--primary);
         }
 
         .stTabs [aria-selected="true"] p {
-            color: #ffffff !important;
+            color: var(--primary) !important;
         }
 
         div[data-testid="stAlert"] {
@@ -506,6 +531,21 @@ st.markdown(
                 border-top: 1px solid rgba(255, 255, 255, 0.2);
                 padding-left: 0;
                 padding-top: 0.9rem;
+            }
+
+            .stTabs [data-baseweb="tab-list"] {
+                display: flex;
+                width: 100%;
+            }
+
+            .stTabs [data-baseweb="tab"] {
+                flex: 1 1 0;
+                min-width: 0;
+                padding-inline: 0.7rem;
+            }
+
+            .stTabs [data-baseweb="tab"] p {
+                font-size: 0.9rem;
             }
         }
     </style>
